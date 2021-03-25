@@ -1,0 +1,2 @@
+D:\Work\Program C++\tic_tac_toe\Debug\tic_tac_toe.exe
+D:\Work\Program C++\tic_tac_toe\Debug\tic_tac_toe.pdb

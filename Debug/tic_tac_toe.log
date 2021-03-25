@@ -1,0 +1,9 @@
+﻿  Source.cpp
+D:\Work\Program C++\tic_tac_toe\Source.cpp(125,114): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\Work\Program C++\tic_tac_toe\Source.cpp(125,91): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\Work\Program C++\tic_tac_toe\Source.cpp(125,68): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\Work\Program C++\tic_tac_toe\Source.cpp(125,41): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\Work\Program C++\tic_tac_toe\Source.cpp(126,146): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\Work\Program C++\tic_tac_toe\Source.cpp(126,89): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\Work\Program C++\tic_tac_toe\Source.cpp(106,3): warning C4060: оператор switch не содержит метку "case" или "default"
+  tic_tac_toe.vcxproj -> D:\Work\Program C++\tic_tac_toe\Debug\tic_tac_toe.exe
