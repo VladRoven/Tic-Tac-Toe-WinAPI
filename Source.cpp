@@ -6,10 +6,10 @@
 
 HINSTANCE hInst;
 const int size = 20;
+const int block = 5;
 
 struct square
 {
-	int num;
 	int x, y;
 	char value;
 };
@@ -18,7 +18,9 @@ square** arr;
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); 
 void initArray();
-int check();
+int checkWinner();
+bool chekLines(char, int, int);
+bool chekDiagonal(char, int, int);
 
 int WINAPI WinMain(HINSTANCE hInstance, // дескриптор экземпляра приложения
 	HINSTANCE hPrevInst, // не используем
@@ -92,6 +94,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static double sY;
 	static bool flag = true;
 	static int player = 1;
+	static bool win = false;
 
 	switch (message)
 	{
@@ -140,6 +143,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		ScreenToClient(hWnd, &pt);
 		/*wsprintf(textBuffer, "X: %d Y: %d", pt.x, pt.y);
 		MessageBox(hWnd, textBuffer, "Координаты курсора", MB_OK);*/
+
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
@@ -166,6 +170,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						}
 
 						flag = false;
+						InvalidateRect(hWnd, NULL, TRUE);
+						
+						if (checkWinner() == 1)
+						{
+							MessageBox(hWnd, "Выиграли X!", "Конец игры", MB_OK);
+							win = true;
+						}
+						else if (checkWinner() == 2)
+						{
+							MessageBox(hWnd, "Выиграли O!", "Конец игры", MB_OK);
+							win = true;
+							
+						}
+
+						if (win)
+						{
+							win = false;
+							initArray();
+							player = 1;
+							LoadString(hInst, IDS_PLAYER1, textBuffer, 100);
+							SetWindowText(hWnd, textBuffer);
+							InvalidateRect(hWnd, NULL, TRUE);
+						}
+
 						break;
 					}
 					else
@@ -181,7 +209,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 		}
-		InvalidateRect(hWnd, NULL, TRUE);
 		break;
 
 	default:
@@ -192,7 +219,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void initArray()
 {
-	int clk = 0;
 	arr = new square * [size];
 
 	for (int i = 0; i < size; i++)
@@ -202,7 +228,6 @@ void initArray()
 	{
 		for (int j = 0; j < size; j++)
 		{
-			arr[i][j].num = clk++;
 			arr[i][j].value = ' ';
 			arr[i][j].y = i + 1;
 			arr[i][j].x = j + 1;
@@ -210,8 +235,111 @@ void initArray()
 	}
 }
 
-int check()
+int checkWinner()
 {
+	int pWinner = 0;
+	// 16 rect 5x5
 
-	return 1;
+	for (int i = 0; i < size - block; i++)
+	{
+		for (int j = 0; j < size - block; j++)
+		{
+			if (chekLines('X', i, j))
+				pWinner = 1;
+			else if (chekLines('O', i, j))
+				pWinner = 2;
+			else if (chekDiagonal('X', i, j))
+				pWinner = 1;
+			else if (chekDiagonal('O', i, j))
+				pWinner = 2;
+		}
+	}
+
+	return pWinner;
+}
+
+bool chekLines(char symbol, int x, int y)
+{
+	int counter = 0;
+
+	for (int i = x; i < x + block; i++)
+	{
+		for (int j = y; j < y + block; j++)
+		{
+			if (arr[i][j].value == symbol)
+				++counter;
+			else
+			{
+				counter = 0;
+				break;
+			}
+		}
+
+		if (counter == 5)
+			break;
+	}
+
+	if (counter != 5)
+	{
+		counter = 0;
+
+		for (int i = x; i < x + block; i++)
+		{
+			for (int j = y; j < y + block; j++)
+			{
+				if (arr[j][i].value == symbol)
+					++counter;
+				else
+				{
+					counter = 0;
+					break;
+				}
+			}
+
+			if (counter == 5)
+				return true;
+		}
+	}
+	else
+		return true;
+
+	return false;
+}
+
+bool chekDiagonal(char symbol, int x, int y)
+{
+	int counter = 0;
+
+	for (int i = x; i < x + block; i++)
+	{
+		if (arr[i][y--].value == symbol)
+			counter++;
+		else
+		{
+			counter = 0;
+			break;
+		}
+	}
+
+	if (counter != 5)
+	{
+		for (int i = x + block; i > x; i--)
+		{
+			if (arr[i][y--].value == symbol)
+				counter++;
+			else
+			{
+				counter = 0;
+				break;
+			}
+		}
+
+		if (counter == 5)
+			return true;
+
+	}
+	else
+		return true;
+
+	return false;
 }
