@@ -47,6 +47,32 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Menu
+//
+
+IDR_MENU1 MENU
+BEGIN
+    POPUP "Изменить"
+    BEGIN
+        MENUITEM "Цвет маркера Х",              ID_CHANGEX
+        MENUITEM "Цвет маркера О",              ID_CHANGEO
+        MENUITEM "Цвет фона",                   ID_CHANGE_BGRND
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON_TTT            ICON                    "icon1.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
