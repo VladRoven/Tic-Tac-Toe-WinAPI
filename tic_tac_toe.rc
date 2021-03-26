@@ -58,6 +58,11 @@ BEGIN
         MENUITEM "Цвет маркера О",              ID_CHANGEO
         MENUITEM "Цвет фона",                   ID_CHANGE_BGRND
     END
+    POPUP "Результаты"
+    BEGIN
+        MENUITEM "Просмотр",                    ID_SHOW_RES
+        MENUITEM "Сохранить",                   ID_SAVE_RES
+    END
 END
 
 

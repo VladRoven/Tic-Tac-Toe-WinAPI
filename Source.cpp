@@ -10,6 +10,9 @@ COLORREF colorO;
 COLORREF colorBgrnd;
 const int size = 20;
 const int block = 5;
+int winResX = 0;
+int winResO = 0;
+int resDrw = 0;
 
 struct square
 {
@@ -133,6 +136,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			colorPicker(hWnd, '-');
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
+
+		case ID_SHOW_RES:
+			wsprintf(textBuffer, "Кол-во побед Х: %d\nКол-во побед O: %d\nКол-во игр в ничью: %d", winResX, winResO, resDrw);
+			MessageBox(hWnd, textBuffer, "Результаты", MB_OK);
+			break;
+
+		case ID_SAVE_RES:
+			OPENFILENAME ofn = { 0 };
+			DWORD BytesWritten;
+
+			char szFile[MAX_PATH];
+			char szDirect[260];
+			char szFileName[260];
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = NULL;
+			ofn.lpstrFile = szDirect;
+			*(ofn.lpstrFile) = 0;
+			ofn.nMaxFile = sizeof(szDirect);
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = szFileName;
+			*(ofn.lpstrFileTitle) = 0;
+			ofn.nMaxFileTitle = sizeof(szFileName);
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_EXPLORER;
+			ofn.lpstrFilter = "Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0";
+			ofn.lpstrDefExt = "txt";
+			if (GetSaveFileName(&ofn))
+			{
+				HANDLE hFile = CreateFile(ofn.lpstrFile,
+					GENERIC_WRITE,
+					FILE_SHARE_WRITE,
+					NULL,
+					CREATE_ALWAYS,
+					FILE_ATTRIBUTE_NORMAL,
+					NULL);
+
+				wsprintf(textBuffer, "Кол-во побед Х: %d\nКол-во побед O: %d\nКол-во игр в ничью: %d", winResX, winResO, resDrw);
+				std::string strText = std::string(textBuffer);
+				WriteFile(hFile, strText.c_str(), strText.size(), &BytesWritten, NULL);
+				CloseHandle(hFile);
+			}
+			break;
 		}
 		break;
 
@@ -227,17 +272,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						{
 							InvalidateRect(hWnd, NULL, TRUE);
 							MessageBox(hWnd, "Выиграли X!", "Конец игры", MB_OK);
+							++winResX;
 							win = true;
 						}
 						else if (checkWinner() == 2)
 						{
 							InvalidateRect(hWnd, NULL, TRUE);
+							++winResO;
 							MessageBox(hWnd, "Выиграли O!", "Конец игры", MB_OK);
 							win = true;
 							
 						}
 						else if (checkWinner() == 3)
 						{
+							InvalidateRect(hWnd, NULL, TRUE);
+							++resDrw;
 							MessageBox(hWnd, "Ничья!", "Конец игры", MB_OK);
 							win = true;
 
